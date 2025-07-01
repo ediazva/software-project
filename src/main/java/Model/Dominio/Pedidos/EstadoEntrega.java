@@ -1,8 +1,5 @@
 package Model.Dominio.Pedidos;
 
-/**
- * 
- */
 public enum EstadoEntrega {
     Asignado,
     Recogido,

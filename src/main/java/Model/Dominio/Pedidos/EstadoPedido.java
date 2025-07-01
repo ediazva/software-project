@@ -1,12 +1,9 @@
 package Model.Dominio.Pedidos;
 
-/**
- * 
- */
 public enum EstadoPedido {
     Pendiente,
-    En_Preparacion,
-    Listo_para _Recoge,
+    EnPreparacion,
+    ListoParaRecoger,
     EnCamino,
     Entregado,
     Cancelado
