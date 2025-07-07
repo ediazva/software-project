@@ -37,6 +37,7 @@ public class HorarioAtencion {
         }
     }
 
+    // Convierte un nombre de día en español a DayOfWeek
     private DayOfWeek parseDia(String dia) {
         switch (dia.toLowerCase(Locale.ROOT)) {
             case "lunes": return DayOfWeek.MONDAY;
