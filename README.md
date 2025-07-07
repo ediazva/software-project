@@ -1,6 +1,9 @@
 # Prácticas usadas
 Referencias: https://www.oracle.com/technetwork/java/codeconventions-150003.pdf
 
+## Reporte SonarLint
+![](sonarlint.png)
+
 ### `Dinero.java`
 #### Indentación (Sección 4)
 Se recomienda utilizar cuatro espacios para cada nivel de sangría en el código, en lugar de tabuladores, para mantener la legibilidad y consistencia en todos los entornos. Si se usan tabuladores, deben equivaler exactamente a 8 espacios.
