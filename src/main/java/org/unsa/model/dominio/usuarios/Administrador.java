@@ -15,8 +15,8 @@ public class Administrador extends Usuario {
         return departamento;
     }
 
-    public String setDepartamento(String departamento) {
-        return departamento;
+    public void  setDepartamento(String departamento) {
+        this.departamento = departamento;
     }
 
     /*
