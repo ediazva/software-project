@@ -2,34 +2,43 @@
 package org.unsa.model.dominio.usuarios;
 
 import java.util.Date;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Usuario {
-    private int id;
+    private String id;
     private String nombre;
     private String email;
     private String telefono;
     private Date fechaRegistro;
     private  boolean activo;
 
+    private static final Logger logger = Logger.getLogger(Usuario.class.getName());
     //constructor
     public Usuario(){
-       this.fechaRegistro = new Date();
-       this.activo = true;
+        this.id = UUID.randomUUID().toString();
+        this.fechaRegistro = new Date();
+        this.activo = true;
+        if(logger.isLoggable(Level.INFO)) {
+            logger.info("Usuario creado(vacio) con ID" + this.id);
+        }
     }
 
-    public Usuario(int id, String nombre, String email, String telefono) {
+    public Usuario(String id, String nombre, String email, String telefono) {
         this.id = id;
         this.nombre = nombre;
         this.email = email;
         this.telefono = telefono;
         this.fechaRegistro = new Date();
         this.activo = true;
+        if(logger.isLoggable(Level.INFO)) {
+            logger.info("Usuario creado (parametros) con ID" + this.id + "y nombre:  " + this.nombre);
+        }
     }
 
-    public int getId() {
-        return id;
-    }
-    public void setId(int id) {
+    public String getId() {return id;}
+    public void setId(String id) {
         this.id = id;
     }
     public String getNombre() {
