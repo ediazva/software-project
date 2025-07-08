@@ -75,16 +75,22 @@ public class Usuario {
     public void actualizarDatosContacto(String email, String telefono) {
         this.email = email;
         this.telefono = telefono;
-        System.out.println("Datos actualizados" + this.nombre);
+        if (logger.isLoggable(Level.INFO)) {
+            logger.info("Datos de contacto actualizados para el usuario " + this.id);
+        }
     }
     public void activarCuenta() {
         this.activo = true;
-        System.out.println("Cuenta de " + this.nombre + "activada");
+        if(logger.isLoggable(Level.INFO)) {
+            logger.info("Cuenta de " + this.nombre + "activada");
+        }
     }
 
     public void desactivarCuenta() {
         this.activo = false;
-        System.out.println("Cuenta de " + this.nombre + "desactivada");
+        if(logger.isLoggable(Level.INFO)) {
+            logger.info("Cuenta de " + this.nombre + "desactivada");
+        }
     }
 
     //depuracion
