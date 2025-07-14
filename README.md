@@ -1,4 +1,4 @@
-# Prácticas usadas
+# Laboratorio 9
 Referencias: https://www.oracle.com/technetwork/java/codeconventions-150003.pdf
 
 ## Reporte SonarLint
@@ -97,3 +97,111 @@ private HorarioAtencion horarioAtencion;
 private List<Plato> platos;
 private Administrador admin;
 ```
+
+# Laboratorio 10 - Estilos de Programación
+## Estilos usados
+### Pipeline
+La clase `HomeController` aplica el estilo de programación Pipeline al estructurar su lógica como una 
+secuencia clara de etapas: primero obtiene los datos (`obtenerRestaurantes()`), luego los transforma 
+agregándolos al modelo (`prepararModelo(...)`), y finalmente entrega una salida 
+(vistaHome()) que representa la vista a renderizar.
+```java
+public class HomeController {
+    public String home(Model model) {
+        List<Restaurante> restaurantes = obtenerRestaurantes();
+        prepararModelo(model, restaurantes);
+        return vistaHome();
+    }
+
+    private List<Restaurante> obtenerRestaurantes() {
+        // ...
+    }
+
+    private void prepararModelo(Model model, List<Restaurante> restaurantes) {
+        // ...
+    }
+
+    private String vistaHome() {
+        // ...
+    }
+}
+```
+### Code golf
+El estilo Code Golf se basa en escribir el menor número posible de líneas o caracteres de código para 
+lograr una funcionalidad. En la función `buscarPorTexto`, este estilo se ve reflejado en varios aspectos: 
+toda la lógica está contenida en una única expresión fluida, que encadena la obtención de datos, 
+el filtrado y la conversión final a lista. No hay variables intermedias ni pasos separados: el método 
+directamente retorna el resultado final, minimizando el tamaño del código. 
+Además, el uso de expresiones lambda `(r -> ...)` y el método `.toList()` en la misma línea muestra cómo 
+el estilo Code Golf favorece la concisión funcional y evita bloques estructurados innecesarios.
+```java
+public List<Restaurante> buscarPorTexto(String texto) {
+    return restauranteRepo
+            .obtenerTodos()
+            .stream()
+            .filter(r -> contiene(r.getNombre(), texto) || contiene(r.getDescripcion(), texto))
+            .toList();
+}
+```
+### Error/Exception Handling
+La función `verDetalle` aplica el estilo de programación Error/Exception Handling, 
+que se enfoca en separar claramente el flujo normal del flujo erróneo mediante el uso de 
+excepciones. En este caso, el intento de obtener un restaurante por su ID se 
+encapsula dentro de un bloque try, lo que indica que la operación puede fallar.
+```java
+    @GetMapping("/{id}")
+    public String verDetalle(@PathVariable Long id, Model model) {
+        try {
+            Restaurante restaurante = restauranteServicio.buscarPorId(id);
+            model.addAttribute("restaurante", restaurante);
+            return "restaurante";
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            return "error";
+        }
+    }
+```
+### RESTful
+Las funciones que se mostraron en las secciones anteriores usan los tags @PostMapping, @PutMapping, @DeleteMapping, @GetMapping. 
+Aplican el estilo de programación RESTful al seguir los principios del diseño de APIs REST: usar los métodos 
+HTTP estándar para representar operaciones sobre recursos.
+
+## Mejora de la calidad del código y correción de "Code Smells"
+### Evitar retornar constantes directamente desde métodos
+Se reemplazó el valor literal retornado por una constante estática de clase, lo que mejora la mantenibilidad y evita el olor a código "Methods should not return constants".
+```java
+static final String HOME_URL = "home";
+
+private String vistaHome() {
+    return HOME_URL;
+}
+```
+Esto permite centralizar el valor, facilitando cambios futuros y evitando la repetición de literales.
+
+### Sustituir la inyección de dependencias por campo
+En lugar de usar inyección por atributo (field injection), se refactorizó la clase para usar inyección por constructor. Esto mejora la legibilidad, permite pruebas más sencillas y cumple con el principio de inversión de dependencias.
+```java
+    private CatalogoRestaurantesService catalogoRestaurantesService;
+    
+    @Autowired
+    public HomeController(CatalogoRestaurantesService catalogoRestaurantesService) {
+        this.catalogoRestaurantesService = catalogoRestaurantesService;    
+    }
+```
+Inyección por constructor es más segura y evita problemas de dependencia no inicializada.
+
+### Evitar el uso de excepciones genéricas
+En lugar de lanzar o propagar una excepción genérica (Exception o RuntimeException), se capturó el error y se devolvió un mensaje de resultado claro a la interfaz web. Esto evita el olor a código "Generic exceptions should never be thrown", y mejora la experiencia del usuario final.
+```java
+@DeleteMapping("/{id}")
+@ResponseBody
+public String eliminarRestaurante(@PathVariable Long id) {
+    try {
+        restauranteServicio.eliminar(id);
+        return "Restaurante eliminado correctamente";
+    } catch (Exception e) {
+        return "No se pudo eliminar el restaurante: " + e.getMessage();
+    }
+}
+```
+Se evita lanzar excepciones innecesarias y se ofrece un resultado más controlado y útil para el cliente HTTP.
