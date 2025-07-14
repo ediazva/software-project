@@ -1,67 +1,50 @@
 package Model.Servicios;
 
-import Dominio.Pedidos.EstadoEntrega;
-import Dominio.Pedidos.Pedido;
-import Dominio.Pedidos.Direccion;
+import Model.Repositorio.RestauranteRepositorio;
+import Model.Dominio.Restaurantes.Restaurante;
+import java.util.List;
 
-import java.io.*;
-import java.util.*;
-
-/**
- * 
- */
 public class CatalogoRestaurantesService {
 
-    /**
-     * Default constructor
-     */
-    public CatalogoRestaurantesService() {
+    private RestauranteRepositorio restauranteRepo;
+
+    public CatalogoRestaurantesService(RestauranteRepositorio restauranteRepo) {
+        this.restauranteRepo = restauranteRepo;
     }
 
-
-    /**
-     * @param texto 
-     * @return
-     */
     public List<Restaurante> buscarPorTexto(String texto) {
-        // TODO implement here
-        return null;
+        return restauranteRepo
+                .obtenerTodos()
+                .stream()
+                .filter(r -> contiene(r.getNombre(), texto) || contiene(r.getDescripcion(), texto))
+                .toList();
     }
 
-    /**
-     * @return
-     */
+    public Restaurante buscarPorId(Long id) throws Exception {
+        return restauranteRepo.buscar(id);
+    }
+
+    private boolean contiene(String campo, String texto) {
+        return campo != null && campo.toLowerCase().contains(texto.toLowerCase());
+    }
+
     public List<Restaurante> obtenerTodos() {
-        // TODO implement here
-        return null;
+        return restauranteRepo.obtenerTodos();
     }
 
-    /**
-     * @param idPedido 
-     * @param idRepartidor
-     */
-    public void asignarRepartidorAPedido(Int idPedido, Int idRepartidor) {
-        // TODO implement here
+    public Restaurante crear(Restaurante nuevo) {
+        restauranteRepo.crear(nuevo);
+        return nuevo;
     }
 
-    /**
-     * @param idEntrega 
-     * @param nuevoEstado
-     */
-    public void actualizarEstadoEntrega(Int idEntrega, EstadoEntrega nuevoEstado) {
-        // TODO implement here
+    public Restaurante actualizar(Long id, Restaurante actualizado) throws Exception {
+        Restaurante existente = restauranteRepo.buscar(id); // Excepción si no existe
+        restauranteRepo.actualizar(id.intValue(), actualizado);
+        return actualizado;
     }
 
-    /**
-     * @param idCliente 
-     * @param idRestaurante 
-     * @param itemsCarrito 
-     * @param direccionEntrega 
-     * @return
-     */
-    public Pedido crearNuevoPedido(Int idCliente, Int idRestaurante, List<DatosPlatoPedido> itemsCarrito, Direccion direccionEntrega) {
-        // TODO implement here
-        return null;
+    public void eliminar(Long id) throws Exception {
+        restauranteRepo.buscar(id); // Excepción si no existe
+        restauranteRepo.eliminar(id.intValue());
     }
-
 }

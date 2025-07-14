@@ -1,5 +1,7 @@
 package Model.Servicios;
 
+import Model.Dominio.Pedidos.Pedido;
+
 import java.io.*;
 import java.util.*;
 
@@ -21,4 +23,7 @@ public class GestionPedidosService {
         // TODO implement here
     }
 
+    public List<Pedido> listarTodos() {
+        return null;
+    }
 }
