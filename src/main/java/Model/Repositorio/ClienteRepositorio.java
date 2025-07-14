@@ -1,24 +1,23 @@
 package Model.Repositorio;
 
-import java.io.*;
-import java.util.*;
+import Model.Dominio.Usuarios.Usuario;
 
 /**
  * 
  */
-public class Plato {
+public class ClienteRepositorio {
 
     /**
      * Default constructor
      */
-    public Plato() {
+    public ClienteRepositorio() {
     }
 
     /**
-     * @param plato 
+     * @param usuario 
      * @return
      */
-    public void crear(Plato plato) {
+    public void crear(ClienteRepositorio usuario) {
         // TODO implement here
         return null;
     }
@@ -27,7 +26,7 @@ public class Plato {
      * @param id 
      * @return
      */
-    public Plato buscar(int id) {
+    public Usuario buscar(int id) {
         // TODO implement here
         return null;
     }
@@ -43,10 +42,10 @@ public class Plato {
 
     /**
      * @param id 
-     * @param plato 
+     * @param usuario 
      * @return
      */
-    public void actualizar(int id, Plato plato) {
+    public void actualizar(int id, ClienteRepositorio usuario) {
         // TODO implement here
         return null;
     }

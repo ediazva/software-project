@@ -1,17 +1,18 @@
 package Model.Repositorio;
 
-import java.io.*;
-import java.util.*;
+import Model.Dominio.Restaurantes.Restaurante;
+
+import java.util.List;
 
 /**
  * 
  */
-public class Restaurante {
+public class RestauranteRepositorio {
 
     /**
      * Default constructor
      */
-    public Restaurante() {
+    public RestauranteRepositorio() {
     }
 
     /**
@@ -20,15 +21,18 @@ public class Restaurante {
      */
     public void crear(Restaurante restaurante) {
         // TODO implement here
-        return null;
     }
 
     /**
      * @param id 
      * @return
      */
-    public Restaurante buscar(int id) {
+    public Restaurante buscar(Long id) throws Exception {
         // TODO implement here
+        throw new Exception("Restaurante no encontrado");
+    }
+
+    public List<Restaurante> obtenerTodos() {
         return null;
     }
 
@@ -38,17 +42,9 @@ public class Restaurante {
      */
     public void eliminar(int id) {
         // TODO implement here
-        return null;
     }
 
-    /**
-     * @param id 
-     * @param restaurante 
-     * @return
-     */
     public void actualizar(int id, Restaurante restaurante) {
-        // TODO implement here
-        return null;
     }
 
 }

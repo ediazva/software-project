@@ -1,24 +1,23 @@
 package Model.Repositorio;
 
-import java.io.*;
-import java.util.*;
+import Model.Dominio.Pedidos.Pedido;
 
 /**
  * 
  */
-public class Usuario {
+public class PedidoRepositorio {
 
     /**
      * Default constructor
      */
-    public Usuario() {
+    public PedidoRepositorio() {
     }
 
     /**
-     * @param usuario 
+     * @param pedido 
      * @return
      */
-    public void crear(Usuario usuario) {
+    public void crear(PedidoRepositorio pedido) {
         // TODO implement here
         return null;
     }
@@ -27,9 +26,9 @@ public class Usuario {
      * @param id 
      * @return
      */
-    public Usuario buscar(int id) {
+    public Pedido buscar(Long id) throws Exception {
         // TODO implement here
-        return null;
+        throw  new Exception("Pedido no encontrado");
     }
 
     /**
@@ -43,10 +42,10 @@ public class Usuario {
 
     /**
      * @param id 
-     * @param usuario 
+     * @param pedido 
      * @return
      */
-    public void actualizar(int id, Usuario usuario) {
+    public void actualizar(int id, PedidoRepositorio pedido) {
         // TODO implement here
         return null;
     }
