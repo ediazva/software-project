@@ -7,30 +7,36 @@ import java.util.logging.Logger;
 public class Administrador extends Usuario {
     private static final String NAME_ADMIN = "Administrador ";
     private static final Logger logger = Logger.getLogger(Administrador.class.getName());
-
-
     private String departamento;
+
     public Administrador(String id, String nombre , String email, String telefono, String departamento){
         super(id,nombre,email,telefono);
         this.departamento = departamento;
+        if(logger.isLoggable(Level.INFO)){
+            logger.info(NAME_ADMIN + getNombre() + " creado con ID: " + getId());
+        }
     }
+
 
     public String getDepartamento() {
         return departamento;
     }
-
     public void  setDepartamento(String departamento) {
         this.departamento = departamento;
     }
 
-    /*
-    @param registrar un nuevo restaurante
-    */
+    /**
+     * registrar un nuevo restaurante
+     * @param restaurante el objeto Restaurante a registrar.
+     */
     public void registrarRestaurante(Restaurante restaurante) {
         if(logger.isLoggable(Level.INFO)) {
             logger.info(NAME_ADMIN + getNombre() + "esta registrando el restaurante " + restaurante.getNombre());
         }
+        //falta implementar para la base de datos
     }
+
+
     /*
     @param //idRestaurante
     @param //idPlato
