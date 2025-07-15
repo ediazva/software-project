@@ -98,10 +98,15 @@ public class Usuario {
     //metodos implementados
 
     public void actualizarDatosContacto(String email, String telefono) {
-        this.email = email;
-        this.telefono = telefono;
-        if (logger.isLoggable(Level.INFO)) {
-            logger.info("Datos de contacto actualizados para el usuario " + this.id);
+
+        try{
+            setEmail(email);
+            this.telefono = telefono;
+            if (logger.isLoggable(Level.INFO)) {
+                logger.info("Datos de contacto actualizados para el usuario " + this.id);
+            }
+        }catch (IllegalArgumentException e){
+            logger.log(Level.SEVERE, String.format("Fallo al actualizar datos de contacto para usuario %s", this.id), e);
         }
     }
     public void activarCuenta() {
@@ -118,7 +123,9 @@ public class Usuario {
         }
     }
 
-    //depuracion
+    /**
+     * Representacion en cadena del objeto Usuario para depuracion.
+     */
     @Override
     public String toString() {
         return "Usuario{" +
