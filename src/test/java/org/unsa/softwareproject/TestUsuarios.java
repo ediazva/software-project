@@ -72,7 +72,7 @@ public class TestUsuarios {
 
             // Usar añadirPlatoARestaurante
             Plato platoNuevo = new Plato("plato-001", "Pizza Pepperoni");
-            admin1.añadirPlatoARestaurante(restauranteNuevo.getId(), platoNuevo);
+            admin1.insertarPlatoARestaurante(restauranteNuevo.getId(), platoNuevo);
 
             // Usar eliminarPlatoDeRestaurante
             admin1.eliminarPlatoDeRestaurante(restauranteNuevo.getId(), platoNuevo.getId());

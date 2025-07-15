@@ -1,7 +1,7 @@
 package org.unsa.model.dominio.Pedidos;
 
-import org.unsa.model.dominio.Restaurantes.Dinero;
-import org.unsa.model.dominio.Restaurantes.Restaurante;
+import org.unsa.model.dominio.restaurantes.Dinero;
+import org.unsa.model.dominio.restaurantes.Restaurante;
 
 import java.util.Date;
 import java.util.List;

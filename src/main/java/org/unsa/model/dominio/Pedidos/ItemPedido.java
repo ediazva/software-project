@@ -1,6 +1,6 @@
 package org.unsa.model.dominio.Pedidos;
 
-import org.unsa.model.dominio.Restaurantes.Dinero;
+import org.unsa.model.dominio.restaurantes.Dinero;
 
 public class ItemPedido {
     private int id;

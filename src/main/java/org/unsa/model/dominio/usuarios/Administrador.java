@@ -1,7 +1,7 @@
 //file: src/main/java/org/unsa/model/User.java
 package org.unsa.model.dominio.usuarios;
 
-import org.unsa.model.dominio.Restaurantes.*;
+import org.unsa.model.dominio.restaurantes.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 public class Administrador extends Usuario {
@@ -26,7 +26,7 @@ public class Administrador extends Usuario {
     }
 
     /**
-     * registrar un nuevo restaurante
+     * Registrar un nuevo restaurante
      * @param restaurante el objeto Restaurante a registrar.
      */
     public void registrarRestaurante(Restaurante restaurante) {
@@ -41,7 +41,7 @@ public class Administrador extends Usuario {
     @param //idRestaurante
     @param //idPlato
     */
-    public void añadirPlatoARestaurante(String idRestaurante, Plato plato) {
+    public void insetarPlatoARestaurante(String idRestaurante, Plato plato) {
         if(logger.isLoggable(Level.INFO)){
             logger.info(NAME_ADMIN + getNombre() + "añadio el plato "+ plato.getNombre() +
                         "del restaurante con ID "+ idRestaurante);
@@ -49,7 +49,7 @@ public class Administrador extends Usuario {
     }
     /**
      * Elimina un plato de un restaurante específico usando su ID de tipo String.
-     * @param idRestaurante ID del restaurante.
+     * @param idRestaurante Id del restaurante.
      * @param idPlato ID del plato a eliminar.
      */
 
@@ -62,7 +62,7 @@ public class Administrador extends Usuario {
 
     /**
      * Actualiza el horario de atención de un restaurante específico usando su ID de tipo String.
-     * @param idRestaurante ID del restaurante.
+     * @param idRestaurante Id del restaurante.
      * @param horario El nuevo objeto HorarioAtencion.
      */
 

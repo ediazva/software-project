@@ -1,4 +1,4 @@
-package org.unsa.model.dominio.Restaurantes;
+package org.unsa.model.dominio.restaurantes;
 
 public class HorarioAtencion {
     private String diaSemana;
