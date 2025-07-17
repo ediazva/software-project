@@ -1,80 +1,138 @@
-//file: src/main/java/org/unsa/model/dominio/restaurantes/Restaurante.java
-
+// file: src/main/java/org/unsa/model/dominio/restaurantes/Restaurante.java
 package org.unsa.model.dominio.restaurantes;
 
-import org.unsa.model.dominio.usuarios.Administrador;
+import jakarta.persistence.*; // Importar todas las anotaciones de JPA
+import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import java.util.List;
-
+/**
+ * Clase que representa un Restaurante en el sistema SueldoMinimo App.
+ * Demuestra el estilo "Things" (POO) con encapsulacion y responsabilidades claras.
+ */
+@Entity // Marca esta clase como una entidad JPA
+@Table(name = "restaurantes") // Mapea esta entidad a la tabla "restaurantes"
 public class Restaurante {
-    private String idRestaurante;
+    @Id // Marca 'id' como la clave primaria
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Indica que el ID sera autoincremental por la DB
+    private int id; // Cambiado a int
+    @Column(nullable = false) // El nombre no puede ser nulo
     private String nombre;
-    private String descripcion;
     private String direccion;
     private String telefono;
+    @Enumerated(EnumType.STRING) // Almacena el enum como String en la DB
+    @Column(nullable = false) // El tipo de cocina no puede ser nulo
     private TipoCocina tipoCocina;
-    private double calificacionPromedio;
-    private HorarioAtencion horarioAtencion;
-    private List<Plato> platos;
-    private Administrador admin;
 
-    public String getId(){
-        return idRestaurante;
-    }
-    public String getNombre(){
-        return nombre;
-    }
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-    public String getDescripcion() {
-        return descripcion;
-    }
-    public String getDireccion(){
-        return direccion;
-    }
-    public String getTelefono(){
-        return telefono;
-    }
-    public TipoCocina getTipoCocina(){
-        return tipoCocina;
-    }
-    public List<Plato> getPlatos(){
-        return platos;
-    }
-    public Administrador getAdmin() {
-        return admin;
-    }
-    public void setAdmin(Administrador admin) {
-        this.admin = admin;
+    @Transient // Indica que este campo no se mapeara a la base de datos
+    private static final Logger logger = Logger.getLogger(Restaurante.class.getName());
+
+    // Constantes para literales de String duplicados en toString()
+    private static final String TO_STRING_PREFIX = "Restaurante{";
+    private static final String ID_FIELD = "id=";
+    private static final String NOMBRE_FIELD = ", nombre='";
+    private static final String DIRECCION_FIELD = ", direccion='";
+    private static final String TELEFONO_FIELD = ", telefono='";
+    private static final String TIPO_COCINA_FIELD = ", tipoCocina=";
+    private static final String TO_STRING_SUFFIX = "}";
+    private static final String SINGLE_QUOTE = "'";
+
+    /**
+     * Constructor vacío para la clase Restaurante.
+     * Es necesario para JPA.
+     */
+    public Restaurante() {
+        logger.info(() -> "Nuevo restaurante creado (constructor vacio). ID sera asignado por JPA.");
     }
 
-    public double getCalificacionPromedio() {
-        return calificacionPromedio;
-    }
-
-    public void setCalificacionPromedio(double calificacionPromedio) {
-        this.calificacionPromedio = calificacionPromedio;
-    }
-
-
-
-    public void addPlato(Plato plato) {
-        if (plato != null && !platos.contains(plato)) {
-            platos.add(plato);
+    /**
+     * Constructor para la clase Restaurante con parametros iniciales.
+     * El ID se pasa para simulacion, pero JPA lo gestionara en un entorno real.
+     * @param id Identificador unico del restaurante (int).
+     * @param nombre Nombre del restaurante.
+     * @param direccion Direccion fisica del restaurante.
+     * @param telefono Numero de telefono del restaurante.
+     * @param tipoCocina Tipo de cocina que ofrece el restaurante.
+     */
+    public Restaurante(int id, String nombre, String direccion, String telefono, TipoCocina tipoCocina) { // ID cambiado a int
+        // En un entorno real con GenerationType.IDENTITY, el ID no se pasaria
+        // en el constructor para nuevas entidades, se dejaria a la DB.
+        // Lo mantenemos para compatibilidad con TestUsuarios.java por ahora.
+        this.id = id; // Si id es 0, JPA lo autogenerara
+        if (nombre == null || nombre.trim().isEmpty()) {
+            logger.log(Level.SEVERE, "Intento de crear restaurante con nombre nulo o vacio.");
+            throw new IllegalArgumentException("El nombre del restaurante no puede ser nulo o vacio.");
         }
+        if (tipoCocina == null) {
+            logger.log(Level.SEVERE, "Intento de crear restaurante con tipo de cocina nulo.");
+            throw new IllegalArgumentException("El tipo de cocina no puede ser nulo.");
+        }
+        this.nombre = nombre;
+        this.direccion = direccion;
+        this.telefono = telefono;
+        this.tipoCocina = tipoCocina;
+        logger.info(() -> "Restaurante creado con ID: " + this.id + " y nombre: " + this.nombre);
     }
 
+    // --- Getters y Setters ---
 
-    public void eliminarPlato(String idRestaurante) {
-        platos.removeIf(p -> p.getId().equals(idRestaurante));
+    public int getId() { return id; } // Cambiado a int
+    public void setId(int id) { // Cambiado a int
+        if (id <= 0 && id != 0) { // Permitir 0 para que JPA lo autogenere
+            logger.log(Level.WARNING, "Intento de establecer ID de restaurante invalido: " + id);
+            throw new IllegalArgumentException("El ID debe ser positivo o 0 para autogeneracion.");
+        }
+        this.id = id;
+        logger.info(() -> "ID de restaurante actualizado a: " + id);
     }
 
-    public void actualizarHorario(HorarioAtencion horario) {
-        this.horarioAtencion = horario;
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+
+    public String getDireccion() { return direccion; }
+    public void setDireccion(String direccion) { this.direccion = direccion; }
+
+    public String getTelefono() { return telefono; }
+    public void setTelefono(String telefono) { this.telefono = telefono; }
+
+    public TipoCocina getTipoCocina() { return tipoCocina; }
+    public void setTipoCocina(TipoCocina tipoCocina) { this.tipoCocina = tipoCocina; }
+
+    /**
+     * Representacion en cadena del objeto Restaurante para depuracion.
+     */
+    @Override
+    public String toString() {
+        return TO_STRING_PREFIX +
+                ID_FIELD + id +
+                NOMBRE_FIELD + nombre + SINGLE_QUOTE +
+                DIRECCION_FIELD + (direccion != null ? direccion : "N/A") + SINGLE_QUOTE +
+                TELEFONO_FIELD + (telefono != null ? telefono : "N/A") + SINGLE_QUOTE +
+                TIPO_COCINA_FIELD + tipoCocina +
+                TO_STRING_SUFFIX;
     }
 
-    public boolean estaDisponible() {
-        return !platos.isEmpty() && horarioAtencion != null;
+    /**
+     * Compara si este objeto Restaurante es igual a otro objeto.
+     * Dos objetos Restaurante se consideran iguales si tienen el mismo ID.
+     * @param o El objeto a comparar.
+     * @return true si los objetos son iguales, false en caso contrario.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Restaurante that = (Restaurante) o;
+        return id == that.id; // Comparacion de int ID
+    }
+
+    /**
+     * Genera un codigo hash para este objeto Restaurante.
+     * Es consistente con el metodo equals().
+     * @return El codigo hash.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(id); // Hash basado en int ID
     }
 }
