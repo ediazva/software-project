@@ -1,7 +1,6 @@
 // file: src/main/java/org/unsa/service/interfaces/IPedidoServicio.java
 package org.unsa.model.service.Interfaces;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.unsa.model.domain.pedidos.Pedido;
 import org.unsa.model.domain.pedidos.DatosPlatoPedido;
 import org.unsa.model.domain.pedidos.EstadoPedido;

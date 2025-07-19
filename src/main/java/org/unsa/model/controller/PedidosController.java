@@ -1,4 +1,4 @@
-// file: src/main/java/org/unsa/controller/pedidos/PedidosController.java
+// file: src/main/java/org/unsa/controller/PedidosController.java
 package org.unsa.model.controller;
 
 import org.unsa.model.domain.pedidos.Pedido;
@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
  * Expone endpoints para crear, consultar y actualizar pedidos.
  */
 @RestController
-@RequestMapping("/api/pedidos") // Ruta base para todos los endpoints de pedidos
+@RequestMapping("/pedidos") // Ruta base para todos los endpoints de pedidos
 public class PedidosController {
 
     private static final Logger logger = LoggerFactory.getLogger(PedidosController.class);
@@ -43,7 +43,7 @@ public class PedidosController {
      */
     @PutMapping
     public ResponseEntity<Pedido> crearPedido(@RequestBody CrearPedidoRequest request) {
-        logger.info("Recibida solicitud para crear pedido para cliente: {} a {} ",idPedido,request.getIdCliente());
+        logger.info("Recibida solicitud para crear pedido para cliente: {}  ",request.getIdCliente());
         try {
 
             if (request.getIdCliente() == null || request.getIdCliente() <= 0 ||
@@ -62,13 +62,13 @@ public class PedidosController {
                     request.getDireccionEntrega(),
                     request.getInstruccionesEspeciales()
             );
-            return new ResponseEntity<>(nuevoPedido, HttpStatus.CREATED); // 201 Created
+            return new ResponseEntity<>(nuevoPedido, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             logger.warn("Error al crear pedido: {} ", e.getMessage(),e);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // 400 Bad Request
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             logger.warn("Error interno al crear pedido: {} ",e.getMessage(),e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // 500 Internal Server Error
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -79,13 +79,13 @@ public class PedidosController {
      * @return ResponseEntity con el pedido encontrado y estado HTTP 200, o 404 si no existe.
      */
     @GetMapping("/{idPedido}")
-    public ResponseEntity<Pedido> verDetallePedido(@PathVariable int idPedido) { // ID cambiado a int
-        logger.info(() -> "Recibida solicitud para ver detalle de pedido con ID: " + idPedido);
+    public ResponseEntity<Pedido> verDetallePedido(@PathVariable Integer idPedido) {
+        logger.info("Recibida solicitud para ver detalle de pedido con ID: {}",idPedido);
         Pedido pedido = pedidoServicio.obtenerPedidoPorId(idPedido);
         if (pedido != null) {
             return new ResponseEntity<>(pedido, HttpStatus.OK); // 200 OK
         } else {
-            logger.warning(() -> "Pedido con ID " + idPedido + " no encontrado.");
+            logger.warn("Pedido con ID {} no encontrado ",idPedido);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404 Not Found
         }
     }
@@ -98,7 +98,7 @@ public class PedidosController {
      */
     @GetMapping("/usuario/{idUsuario}")
     public ResponseEntity<List<Pedido>> verPedidosUsuario(@PathVariable int idUsuario) { // ID cambiado a int
-        logger.info(() -> "Recibida solicitud para ver pedidos de usuario con ID: " + idUsuario);
+        logger.info("Recibida solicitud para ver pedidos de usuario con ID: {} ",idUsuario);
         List<Pedido> pedidos = pedidoServicio.obtenerPedidosPorCliente(idUsuario);
         return new ResponseEntity<>(pedidos, HttpStatus.OK); // 200 OK
     }
@@ -112,16 +112,16 @@ public class PedidosController {
      */
     @PutMapping("/{idPedido}/estado")
     public ResponseEntity<Void> actualizarEstadoPedido(@PathVariable Integer idPedido, @RequestBody ActualizarEstadoPedidoRequest request) { // ID cambiado a int
-        logger.info(() -> "Recibida solicitud para actualizar estado de pedido " + idPedido + " a: " + request.getNuevoEstado(),e);
+        logger.warn("Recibida solicitud para actualizar estado de pedido {} a {} ",idPedido,request.getNuevoEstado());
         try {
             EstadoPedido nuevoEstado = EstadoPedido.valueOf(request.getNuevoEstado().toUpperCase()); // Convertir String a Enum
             pedidoServicio.actualizarEstadoPedido(idPedido, nuevoEstado);
             return new ResponseEntity<>(HttpStatus.OK); // 200 OK
         } catch (IllegalArgumentException e) {
-            logger.log(Level.WARNING, () -> "Estado invalido o pedido no encontrado para ID " + idPedido + ": " + e.getMessage(),e);
+            logger.warn("Estado invalido o pedido no encontrado para ID {} : {} ",idPedido,e.getMessage(),e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // 400 Bad Request
         } catch (Exception e) {
-            logger.log(Level.SEVERE, () -> "Error interno al actualizar estado de pedido " + idPedido + ": " + e.getMessage(),e);
+            logger.warn("Error interno al actualizar estado de pedido {} : {} ",idPedido,e.getMessage(),e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // 500 Internal Server Error
         }
     }
@@ -135,15 +135,15 @@ public class PedidosController {
      */
     @PutMapping("/{idPedido}/cancelar")
     public ResponseEntity<Void> cancelarPedido(@PathVariable Integer idPedido, @RequestParam Integer idUsuario) { // IDs cambiados a int
-        logger.info(() -> "Recibida solicitud para cancelar pedido " + idPedido + " por usuario " + idUsuario);
+        logger.warn("Recibida solicitud para cancelar pedido {} por usuario {} ",idPedido,idUsuario);
         try {
             pedidoServicio.cancelarPedido(idPedido, idUsuario);
             return new ResponseEntity<>(HttpStatus.OK); // 200 OK
         } catch (IllegalArgumentException e) {
-            logger.log(Level.WARNING, () -> "Error al cancelar pedido " + idPedido + ": " + e.getMessage(),e);
+            logger.warn("Error al cancelar pedido {} : {} ",idPedido, e.getMessage(),e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            logger.log(Level.SEVERE, () -> "Error interno al cancelar pedido " + idPedido + ": " + e.getMessage(),e);
+            logger.warn("Error interno al cancelar pedido {} : {} ",idPedido,e.getMessage(),e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -156,15 +156,15 @@ public class PedidosController {
      */
     @PutMapping("/{idPedido}/confirmar-entrega")
     public ResponseEntity<Void> confirmarEntrega(@PathVariable int idPedido) { // ID cambiado a int
-        logger.info(() -> "Recibida solicitud para confirmar entrega de pedido " + idPedido);
+        logger.warn("Recibida solicitud para confirmar entrega de pedido  {} ",idPedido);
         try {
             pedidoServicio.confirmarEntrega(idPedido);
             return new ResponseEntity<>(HttpStatus.OK); // 200 OK
         } catch (IllegalArgumentException e) {
-            logger.log(Level.WARNING, () -> "Error al confirmar entrega de pedido " + idPedido + ": " + e.getMessage());
+            logger.warn("Error al confirmar entrega de pedido  {} : {} ",idPedido,e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Si el pedido no existe
         } catch (Exception e) {
-            logger.log(Level.SEVERE, () -> "Error interno al confirmar entrega de pedido " + idPedido + ": " + e.getMessage());
+            logger.warn("Error interno al confirmar entrega de pedido {}  : {} ",idPedido,e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

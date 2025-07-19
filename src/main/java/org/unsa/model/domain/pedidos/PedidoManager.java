@@ -83,7 +83,7 @@ public class PedidoManager implements IPedidoServicio {
     }
 
     @Override
-    public void cancelarPedido(Integer idPedido, String idUsuario) {
+    public void cancelarPedido(Integer idPedido, Integer idUsuario) {
         Pedido pedido = obtenerPedidoPorId(idPedido);
         pedido.setEstado(EstadoPedido.CANCELADO);
         pedidoRepository.save(pedido);

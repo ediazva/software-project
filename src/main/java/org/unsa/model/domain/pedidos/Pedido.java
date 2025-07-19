@@ -131,7 +131,7 @@ public class Pedido {
     }
 
     // --- Getters ---
-    public Integer getIdPedido() { return idPedido; }
+    public Integer getPedido() { return idPedido; }
     public Cliente getCliente() { return cliente; }
     public Repartidor getRepartidor() { return repartidor; }
     public Restaurante getRestaurante() { return restaurante; }
@@ -143,7 +143,7 @@ public class Pedido {
     public List<ItemPedido> getItems() { return new ArrayList<>(items); } // Retorna copia defensiva
 
     // --- Setters ---
-    public void setIdPedido(Integer idPedido) {
+    public void setPedido(Integer idPedido) {
         if (idPedido <= 0 && idPedido != 0) { // Permitir 0 para que JPA lo autogenere
             logger.log(Level.WARNING, () -> "Intento de establecer ID de pedido invalido: " + idPedido);
             throw new IllegalArgumentException("El ID del pedido debe ser positivo o 0 para autogeneracion.");

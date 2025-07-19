@@ -8,6 +8,6 @@ import org.unsa.model.domain.pedidos.Pedido;
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
     // Puedes añadir métodos personalizados aquí, por ejemplo:
-    // List<Pedido> findByClienteId(Integer clienteId);
-    // List<Pedido> findByEstado(EstadoPedido estado);
+    List<Pedido> findByCliente_Id(Integer clienteId);
+    List<Pedido> findByEstado(EstadoPedido estado);
 }

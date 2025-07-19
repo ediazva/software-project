@@ -10,4 +10,5 @@ public interface RepartidorRepository extends JpaRepository<Repartidor, Integer>
     // Métodos específicos para Repartidor, ej:
     // List<Repartidor> findByTipoVehiculo(String tipoVehiculo);
     // List<Repartidor> findByDisponibleParaEntregasTrue();
+
 }
