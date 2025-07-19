@@ -1,5 +1,5 @@
 // file: src/main/java/org/unsa/dto/restaurantes/ActualizarRestauranteRequest.java
-package org.unsa.dto.restaurantes;
+package org.unsa.model.dtos;
 
 /**
  * DTO para la solicitud de actualizacion de un restaurante existente.

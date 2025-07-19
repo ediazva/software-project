@@ -1,5 +1,5 @@
 // file: src/main/java/org/unsa/dto/usuarios/ActualizarUsuarioRequest.java
-package org.unsa.dto.usuarios;
+package org.unsa.model.dtos;
 
 /**
  * DTO para la solicitud de actualizacion de un usuario existente.

@@ -1,9 +1,9 @@
 // file: src/main/java/org/unsa/service/interfaces/IRestauranteServicio.java
 package org.unsa.service.interfaces;
 
-import org.unsa.model.dominio.restaurantes.Restaurante;
-import org.unsa.model.dominio.restaurantes.TipoCocina;
-import org.unsa.model.dominio.restaurantes.HorarioAtencion; // Para actualizar horarios
+import org.unsa.model.domain.restaurantes.Restaurante;
+import org.unsa.model.domain.restaurantes.TipoCocina;
+import org.unsa.model.domain.restaurantes.HorarioAtencion; // Para actualizar horarios
 
 import java.util.List;
 

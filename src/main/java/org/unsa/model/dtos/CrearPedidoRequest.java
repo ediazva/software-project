@@ -1,8 +1,8 @@
 // file: src/main/java/org/unsa/dto/pedidos/CrearPedidoRequest.java
-package org.unsa.dto.pedidos;
+package org.unsa.model.dtos;
 
-import org.unsa.model.dominio.usuarios.Direccion;
-import org.unsa.model.dominio.pedidos.DatosPlatoPedido; // Asegurarse de importar DatosPlatoPedido
+import org.unsa.model.domain.usuarios.Direccion;
+import org.unsa.model.domain.pedidos.DatosPlatoPedido; // Asegurarse de importar DatosPlatoPedido
 import java.util.List;
 
 /**
@@ -10,8 +10,8 @@ import java.util.List;
  * Contiene los datos necesarios para crear un pedido desde el cliente.
  */
 public class CrearPedidoRequest {
-    private int idCliente; // Cambiado a int
-    private int idRestaurante; // Cambiado a int
+    private Integer idCliente; // Cambiado a int
+    private Integer idRestaurante; // Cambiado a int
     private List<DatosPlatoPedido> itemsCarrito;
     private Direccion direccionEntrega;
     private String instruccionesEspeciales;
@@ -19,7 +19,7 @@ public class CrearPedidoRequest {
     // Constructor vacio necesario para deserializacion JSON
     public CrearPedidoRequest() {}
 
-    public CrearPedidoRequest(int idCliente, int idRestaurante, List<DatosPlatoPedido> itemsCarrito, Direccion direccionEntrega, String instruccionesEspeciales) { // IDs int
+    public CrearPedidoRequest(Integer idCliente, Integer idRestaurante, List<DatosPlatoPedido> itemsCarrito, Direccion direccionEntrega, String instruccionesEspeciales) { // IDs int
         this.idCliente = idCliente;
         this.idRestaurante = idRestaurante;
         this.itemsCarrito = itemsCarrito;
@@ -28,10 +28,10 @@ public class CrearPedidoRequest {
     }
 
     // Getters y Setters
-    public int getIdCliente() { return idCliente; } // Cambiado a int
-    public void setIdCliente(int idCliente) { this.idCliente = idCliente; } // Cambiado a int
-    public int getIdRestaurante() { return idRestaurante; } // Cambiado a int
-    public void setIdRestaurante(int idRestaurante) { this.idRestaurante = idRestaurante; } // Cambiado a int
+    public Integer getIdCliente() { return idCliente; }
+    public void setIdCliente(Integer idCliente) { this.idCliente = idCliente; } // Cambiado a int
+    public Integer getIdRestaurante() { return idRestaurante; } // Cambiado a int
+    public void setIdRestaurante(Integer idRestaurante) { this.idRestaurante = idRestaurante; }
     public List<DatosPlatoPedido> getItemsCarrito() { return itemsCarrito; }
     public void setItemsCarrito(List<DatosPlatoPedido> itemsCarrito) { this.itemsCarrito = itemsCarrito; }
     public Direccion getDireccionEntrega() { return direccionEntrega; }

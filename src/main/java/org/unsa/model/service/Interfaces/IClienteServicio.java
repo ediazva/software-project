@@ -1,7 +1,7 @@
 // file: src/main/java/org/unsa/model/service/Interfaces/IClienteServicio.java
 package org.unsa.model.service.Interfaces;
 
-import org.unsa.model.dominio.usuarios.Cliente;
+import org.unsa.model.domain.usuarios.Cliente;
 
 import java.util.List;
 

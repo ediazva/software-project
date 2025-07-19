@@ -1,5 +1,5 @@
 // file: src/main/java/org/unsa/dto/usuarios/CrearUsuarioRequest.java
-package org.unsa.dto.usuarios;
+package org.unsa.model.dtos;
 
 /**
  * DTO para la solicitud de creacion de un nuevo usuario.

@@ -1,10 +1,11 @@
 // file: src/main/java/org/unsa/service/interfaces/IPedidoServicio.java
 package org.unsa.model.service.Interfaces;
 
-import org.unsa.model.dominio.pedidos.Pedido;
-import org.unsa.model.dominio.pedidos.DatosPlatoPedido;
-import org.unsa.model.dominio.pedidos.EstadoPedido;
-import org.unsa.model.dominio.usuarios.Direccion;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import org.unsa.model.domain.pedidos.Pedido;
+import org.unsa.model.domain.pedidos.DatosPlatoPedido;
+import org.unsa.model.domain.pedidos.EstadoPedido;
+import org.unsa.model.domain.usuarios.Direccion;
 
 import java.util.List;
 
@@ -13,11 +14,11 @@ import java.util.List;
  * Define las operaciones de negocio relacionadas con los pedidos.
  */
 public interface IPedidoServicio {
-    Pedido crearPedido(String idCliente, String idRestaurante, List<DatosPlatoPedido> itemsCarrito, Direccion direccionEntrega, String instruccionesEspeciales);
-    Pedido obtenerPedidoPorId(String idPedido);
-    List<Pedido> obtenerPedidosPorCliente(String idCliente);
-    void actualizarEstadoPedido(String idPedido, EstadoPedido nuevoEstado);
-    void asignarRepartidorAPedido(String idPedido, String idRepartidor);
-    void cancelarPedido(String idPedido, String idUsuario);
-    void confirmarEntrega(String idPedido);
+    Pedido crearPedido(Integer idCliente, Integer idRestaurante, List<DatosPlatoPedido> itemsCarrito, Direccion direccionEntrega, String instruccionesEspeciales);
+    Pedido obtenerPedidoPorId(Integer idPedido);
+    List<Pedido> obtenerPedidosPorCliente(Integer idCliente);
+    void actualizarEstadoPedido(Integer idPedido, EstadoPedido nuevoEstado);
+    void asignarRepartidorAPedido(Integer idPedido, Integer idRepartidor);
+    void cancelarPedido(Integer idPedido, Integer idUsuario);
+    void confirmarEntrega(Integer idPedido);
 }

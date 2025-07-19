@@ -1,7 +1,7 @@
 // file: src/main/java/org/unsa/dto/platillos/ActualizarPlatilloRequest.java
-package org.unsa.dto.platillos;
+package org.unsa.model.dtos;
 
-import org.unsa.model.dominio.restaurantes.Dinero;
+import org.unsa.model.domain.restaurantes.Dinero;
 
 /**
  * DTO para la solicitud de actualizacion de un platillo existente.
