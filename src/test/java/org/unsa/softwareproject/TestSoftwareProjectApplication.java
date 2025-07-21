@@ -1,6 +1,7 @@
 package org.unsa.softwareproject;
 
 import org.springframework.boot.SpringApplication;
+import org.unsa.model.SoftwareProjectApplication;
 
 public class TestSoftwareProjectApplication {
 
