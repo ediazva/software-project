@@ -1,15 +1,22 @@
     package org.unsa.model.domain.pedidos;
 
     import jakarta.persistence.*; // Importa todas las anotaciones JPA
-    import org.unsa.model.domain.usuarios.Repartidor; // Asumiendo esta es la ruta a tu Repartidor
+    import org.unsa.model.domain.restaurantes.Plato;
+    import org.unsa.model.domain.pedidos.Entrega;
+    import org.unsa.model.domain.usuarios.Repartidor;
     import java.util.Date;
-    import java.util.Objects; // Para equals y hashCode
-    import java.util.logging.Logger; // Para logging
+    import java.util.Objects;
+
+    import lombok.*;
+    import org.slf4j.Logger;
+    import org.slf4j.LoggerFactory;
 
     /**
      * Clase que representa una Entrega en el sistema.
      * Debe ser una entidad JPA para ser persistida.
      */
+    @Getter
+    @Setter
     @Entity // Marca esta clase como una entidad JPA
     @Table(name = "entregas") // Mapea esta entidad a la tabla "entregas"
     public class Entrega {
@@ -46,7 +53,7 @@
         private String ubicacionActualRepartidor; // Coordenadas o descripción de la ubicación
 
         @Transient // Este campo no se mapeará a la base de datos
-        private static final Logger logger = Logger.getLogger(Entrega.class.getName());
+        private static final Logger logger = LoggerFactory.getLogger(Entrega.class);
 
         // Constantes para toString (si las usas, como en otras entidades)
         private static final String TO_STRING_PREFIX = "Entrega{";
@@ -75,79 +82,8 @@
             this.fechaHoraAsignacion = null;
             this.fechaHoraRecojo = null;
             this.fechaHoraEntrega = null;
-            logger.info("Nueva Entrega creada para Pedido ID: " + pedido.getId());
+            logger.info("Nueva Entrega creada para Pedido ID: {} ",pedido.getIdPedido());
         }
-
-        // --- Getters y Setters ---
-
-        public Integer getId() {
-            return id;
-        }
-
-        // El setter para el ID no es común para IDs autogenerados, JPA se encarga.
-        // Solo si necesitas establecerlo manualmente, lo incluirías.
-        // public void setId(Integer id) { this.id = id; }
-
-        public Pedido getPedido() {
-            return pedido;
-        }
-
-        public void setPedido(Pedido pedido) {
-            this.pedido = pedido;
-        }
-
-        public Repartidor getRepartidor() {
-            return repartidor;
-        }
-
-        public void setRepartidor(Repartidor repartidor) {
-            this.repartidor = repartidor;
-        }
-
-        public EstadoEntrega getEstado() {
-            return estado;
-        }
-
-        public void setEstado(EstadoEntrega estado) {
-            this.estado = estado;
-        }
-
-        public Date getFechaHoraAsignacion() {
-            return fechaHoraAsignacion;
-        }
-
-        public void setFechaHoraAsignacion(Date fechaHoraAsignacion) {
-            this.fechaHoraAsignacion = fechaHoraAsignacion;
-        }
-
-        public Date getFechaHoraRecojo() {
-            return fechaHoraRecojo;
-        }
-
-        public void setFechaHoraRecojo(Date fechaHoraRecojo) {
-            this.fechaHoraRecojo = fechaHoraRecojo;
-        }
-
-        public Date getFechaHoraEntrega() {
-            return fechaHoraEntrega;
-        }
-
-        public void setFechaHoraEntrega(Date fechaHoraEntrega) {
-            this.fechaHoraEntrega = fechaHoraEntrega;
-        }
-
-        public String getUbicacionActualRepartidor() {
-            return ubicacionActualRepartidor;
-        }
-
-        public void setUbicacionActualRepartidor(String ubicacionActualRepartidor) {
-            this.ubicacionActualRepartidor = ubicacionActualRepartidor;
-        }
-
-        // --- Métodos de Comportamiento (Lógica que afecta el estado interno de la Entrega) ---
-        // NOTA: La lógica que llama a repositorios debe ir en la capa de Servicio.
-        // Aquí solo los métodos que cambian el estado interno de la 'Entrega'.
-
         /**
          * Asigna un repartidor a esta entrega. Este método asume que el objeto Repartidor ya está cargado.
          * @param repartidor El objeto Repartidor asignado.
@@ -159,7 +95,7 @@
             this.repartidor = repartidor;
             this.estado = EstadoEntrega.ASIGNADO;
             this.fechaHoraAsignacion = new Date();
-            logger.info("Entrega ID " + id + " asignada a Repartidor ID " + repartidor.getId());
+            logger.info("Entrega ID  {}  asignada a Repartidor ID {} ",id,repartidor.getId());
         }
 
         /**
@@ -215,7 +151,7 @@
         public String toString() {
             return TO_STRING_PREFIX +
                     ID_FIELD + id +
-                    PEDIDO_ID_FIELD + (pedido != null ? pedido.getId() : "N/A") +
+                    PEDIDO_ID_FIELD + (pedido != null ? pedido.getIdPedido() : "N/A") +
                     REPARTIDOR_ID_FIELD + (repartidor != null ? repartidor.getId() : "N/A") +
                     ESTADO_FIELD + estado +
                     ", fechaHoraAsignacion=" + fechaHoraAsignacion +

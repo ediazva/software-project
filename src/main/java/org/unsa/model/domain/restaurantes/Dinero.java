@@ -18,4 +18,8 @@ public class Dinero {
         this.valor = valor;
         this.moneda = moneda;
     }
+
+    public Dinero sumar(Dinero subtotal) {
+        return new Dinero(this.valor + subtotal.getValor(), this.moneda);
+    }
 }

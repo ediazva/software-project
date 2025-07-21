@@ -22,7 +22,6 @@ public class MainController {
         userRepository.save(n);
         return "Saved";
     }
-
     @GetMapping(path="/all")
     public @ResponseBody Iterable<Usuario> getAllUsers() {
         return userRepository.findAll();

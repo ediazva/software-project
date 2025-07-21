@@ -14,11 +14,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import lombok.*;
 
 /**
  * Clase que representa un Pedido en el sistema SueldoMinimo App.
  * Contiene detalles del pedido, cliente, repartidor, restaurante y los items.
  */
+@Data
 @Entity
 @Table(name = "pedidos") // Mapea esta entidad a la tabla "pedidos"
 public class Pedido {
@@ -134,102 +136,9 @@ public class Pedido {
     }
 
     // --- Getters ---
-    public Integer getPedido() { return idPedido; }
-    public Cliente getCliente() { return cliente; }
-    public Repartidor getRepartidor() { return repartidor; }
-    public Restaurante getRestaurante() { return restaurante; }
-    public Date getFechaHoraCreacion() { return fechaHoraCreacion; }
-    public EstadoPedido getEstado() { return estado; }
-    public Dinero getMontoTotal() { return montoTotal; }
-    public String getInstruccionesEspeciales() { return instruccionesEspeciales; }
-    public Direccion getDireccionEntrega() { return direccionEntrega; }
-    public List<ItemPedido> getItems() { return new ArrayList<>(items); } // Retorna copia defensiva
+    // Retorna copia defensiva
 
     // --- Setters ---
-    public void setPedido(Integer idPedido) {
-        if (idPedido <= 0 && idPedido != 0) { // Permitir 0 para que JPA lo autogenere
-            logger.log(Level.WARNING, () -> "Intento de establecer ID de pedido invalido: " + idPedido);
-            throw new IllegalArgumentException("El ID del pedido debe ser positivo o 0 para autogeneracion.");
-        }
-        this.idPedido = idPedido;
-        logger.info(() -> "ID de pedido actualizado a: " + idPedido);
-    }
-
-    public void setCliente(Cliente cliente) {
-        if (cliente == null) {
-            logger.log(Level.WARNING, () -> "Intento de establecer cliente nulo para pedido " + this.idPedido);
-            throw new IllegalArgumentException("El cliente no puede ser nulo.");
-        }
-        this.cliente = cliente;
-        logger.info(() -> "Cliente actualizado a: " + cliente.getId() + " para pedido " + this.idPedido);
-    }
-
-    public void setRepartidor(Repartidor repartidor) {
-        this.repartidor = repartidor; // Puede ser nulo
-        logger.info(() -> "Repartidor actualizado a: " + (repartidor != null ? repartidor.getId() : "N/A") + " para pedido " + this.idPedido);
-    }
-
-    public void setRestaurante(Restaurante restaurante) {
-        if (restaurante == null) {
-            logger.log(Level.WARNING, () -> "Intento de establecer restaurante nulo para pedido " + this.idPedido);
-            throw new IllegalArgumentException("El restaurante no puede ser nulo.");
-        }
-        this.restaurante = restaurante;
-        logger.info(() -> "Restaurante para pedido " + this.idPedido+ " actualizado a: " + restaurante.getNombre());
-    }
-
-    public void setFechaHoraCreacion(Date fechaHoraCreacion) {
-        if (fechaHoraCreacion == null) {
-            logger.log(Level.WARNING, () -> "Intento de establecer fecha de creacion nula para pedido " + this.idPedido);
-            throw new IllegalArgumentException("La fecha de creacion no puede ser nula.");
-        }
-        this.fechaHoraCreacion = fechaHoraCreacion;
-        logger.info(() -> "Fecha/hora de creacion actualizada para pedido " + this.idPedido + " a: " + fechaHoraCreacion);
-    }
-
-    public void setEstado(EstadoPedido estado) {
-        if (estado == null) {
-            logger.log(Level.WARNING, () -> "Intento de establecer estado nulo para pedido " + this.idPedido);
-            throw new IllegalArgumentException("El estado no puede ser nulo.");
-        }
-        this.estado = estado;
-        logger.info(() -> "Estado de pedido " + this.idPedido + " actualizado a: " + estado);
-    }
-
-    public void setMontoTotal(Dinero montoTotal) {
-        if (montoTotal == null) {
-            logger.log(Level.WARNING, () -> "Intento de establecer monto total nulo para pedido " + this.idPedido);
-            throw new IllegalArgumentException("El monto total no puede ser nulo.");
-        }
-        this.montoTotal = montoTotal;
-        logger.info(() -> "Monto total de pedido " + this.idPedido + " actualizado a: " + montoTotal);
-    }
-
-    public void setInstruccionesEspeciales(String instruccionesEspeciales) {
-        this.instruccionesEspeciales = instruccionesEspeciales; // Puede ser nulo o vacio
-        logger.info(() -> "Instrucciones especiales para pedido " + this.idPedido + " actualizadas.");
-    }
-
-    public void setDireccionEntrega(Direccion direccionEntrega) {
-        if (direccionEntrega == null) {
-            logger.log(Level.WARNING, () -> "Intento de establecer direccion de entrega nula para pedido " + this.idPedido);
-            throw new IllegalArgumentException("La direccion de entrega no puede ser nula.");
-        }
-        this.direccionEntrega = direccionEntrega;
-        logger.info(() -> "Direccion de entrega para pedido " + this.idPedido + " actualizada.");
-    }
-
-    public void setItems(List<ItemPedido> items) {
-        if (items == null) {
-            logger.log(Level.WARNING, () -> "Intento de establecer lista de items nula para pedido " + this.idPedido);
-            throw new IllegalArgumentException("La lista de items no puede ser nula.");
-        }
-        this.items.clear(); // Limpiar items existentes
-        this.items.addAll(items); // Añadir nuevos items
-        this.montoTotal = calcularMontoTotal(); // Recalcular monto total al cambiar items
-        logger.info(() -> "Items para pedido " + this.idPedido + " actualizados. Nuevo monto total: " + this.montoTotal);
-    }
-
     // --- Métodos de Comportamiento ---
 
     /**
@@ -292,5 +201,13 @@ public class Pedido {
                 DIRECCION_ENTREGA_FIELD + direccionEntrega +
                 ITEMS_FIELD + items +
                 TO_STRING_SUFFIX;
+    }
+
+    public Integer getIdPedido() {
+        return idPedido;
+    }
+
+    public void setIdPedido(Integer idPedido) {
+        this.idPedido = idPedido;
     }
 }

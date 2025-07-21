@@ -4,13 +4,15 @@ package org.unsa.model.domain.usuarios;
 import jakarta.persistence.Entity; // Importar la anotacion Entity
 import jakarta.persistence.PrimaryKeyJoinColumn; // Para herencia JOINED
 import jakarta.persistence.Transient; // Para campos no persistentes
-
+import lombok.*;
 import java.util.logging.Logger;
 
 /**
  * Clase que representa a un Repartidor en el sistema SueldoMinimo App.
  * Extiende de Usuario y puede incluir atributos especificos de repartidor.
  */
+@Getter
+@Setter
 @Entity // Marca esta clase como una entidad JPA
 @PrimaryKeyJoinColumn(name = "id") // Especifica la columna de union con la tabla padre
 public class Repartidor extends Usuario {
@@ -36,15 +38,15 @@ public class Repartidor extends Usuario {
 
     /**
      * Constructor para la clase Repartidor.
-     * @param id Identificador unico del repartidor (int).
+     * @param idRepartidor Identificador unico del repartidor (int).
      * @param nombre Nombre completo del repartidor.
      * @param email Correo electronico del repartidor.
      * @param telefono Numero de telefono del repartidor.
      * @param tipoVehiculo Tipo de vehiculo que utiliza el repartidor.
      * @param disponibleParaEntregas Estado de disponibilidad para nuevas entregas.
      */
-    public Repartidor(Integer id, String nombre, String email, String telefono, String tipoVehiculo, boolean disponibleParaEntregas) { // ID cambiado a int
-        super(id, nombre, email, telefono); // Llama al constructor de la clase padre Usuario
+    public Repartidor(Integer idRepartidor, String nombre, String email, String telefono, String tipoVehiculo, boolean disponibleParaEntregas) { // ID cambiado a int
+        super(idRepartidor, nombre, email, telefono); // Llama al constructor de la clase padre Usuario
         this.tipoVehiculo = tipoVehiculo;
         this.disponibleParaEntregas = disponibleParaEntregas;
         logger.info(() -> "Repartidor creado con ID: " + getId() + ", nombre: " + getNombre());

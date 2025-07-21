@@ -1,14 +1,15 @@
-package org.unsa.model.service;
+package org.unsa.model.domain.pedidos;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.unsa.model.domain.pedidos.DatosPlatoPedido;
-import org.unsa.model.domain.pedidos.EstadoPedido;
-import org.unsa.model.domain.pedidos.Pedido;
+import org.unsa.model.domain.usuarios.Cliente;
 import org.unsa.model.domain.usuarios.Direccion;
-import org.unsa.model.repository.PedidoRepository;
+import org.unsa.model.domain.usuarios.Repartidor;
+import org.unsa.model.domain.restaurantes.Restaurante;
 import org.unsa.model.repository.ClienteRepository;
+import org.unsa.model.repository.PedidoRepository;
 import org.unsa.model.repository.RepartidorRepository;
+import org.unsa.model.repository.RestauranteRepository;
 import org.unsa.model.service.Interfaces.IPedidoServicio;
 
 import java.util.List;
@@ -17,38 +18,45 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Service
+@RequiredArgsConstructor
 public class PedidoManager implements IPedidoServicio {
 
     private static final Logger logger = Logger.getLogger(PedidoManager.class.getName());
 
     private final PedidoRepository pedidoRepository;
     private final ClienteRepository clienteRepository;
+    private final RestauranteRepository restauranteRepository;
     private final RepartidorRepository repartidorRepository;
 
-    @Autowired
-    public PedidoManager(PedidoRepository pedidoRepository,
-                         ClienteRepository clienteRepository,
-                         RepartidorRepository repartidorRepository) {
-        this.pedidoRepository = pedidoRepository;
-        this.clienteRepository = clienteRepository;
-        this.repartidorRepository = repartidorRepository;
-    }
-
-    @Override
     public Pedido crearNuevoPedido(Integer idCliente, Integer idRestaurante, List<DatosPlatoPedido> itemsCarrito, Direccion direccionEntrega, String instruccionesEspeciales) {
         try {
+            Cliente cliente = clienteRepository.findById(idCliente)
+                    .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + idCliente));
+            Restaurante restaurante = restauranteRepository.findById(idRestaurante)
+                    .orElseThrow(() -> new RuntimeException("Restaurante no encontrado con ID: " + idRestaurante));
+
             Pedido pedido = new Pedido();
-            pedido.setIdCliente(idCliente);
-            pedido.setIdRestaurante(idRestaurante);
-            pedido.setItems(itemsCarrito);
+            pedido.setCliente(cliente);
+            pedido.setRestaurante(restaurante);
             pedido.setDireccionEntrega(direccionEntrega);
             pedido.setInstruccionesEspeciales(instruccionesEspeciales);
             pedido.setEstado(EstadoPedido.PENDIENTE);
-            return pedidoRepository.save(pedido);
+
+            // Convertir DatosPlatoPedido -> ItemPedido aquí si es necesario
+            // pedido.setItems(convertirItems(itemsCarrito));
+
+            Pedido pedidoGuardado = pedidoRepository.save(pedido);
+            logger.info("Pedido creado exitosamente con ID: " + pedidoGuardado.getIdPedido());
+            return pedidoGuardado;
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error al crear el pedido: " + e.getMessage(), e);
             throw new RuntimeException("No se pudo crear el pedido.");
         }
+    }
+
+    @Override
+    public Pedido crearPedido(Integer idCliente, Integer idRestaurante, List<DatosPlatoPedido> itemsCarrito, Direccion direccionEntrega, String instruccionesEspeciales) {
+        return crearNuevoPedido(idCliente, idRestaurante, itemsCarrito, direccionEntrega, instruccionesEspeciales);
     }
 
     @Override
@@ -59,25 +67,22 @@ public class PedidoManager implements IPedidoServicio {
 
     @Override
     public List<Pedido> obtenerPedidosPorCliente(Integer idCliente) {
-        return pedidoRepository.findByIdCliente(idCliente);
+        return pedidoRepository.findByCliente_Id(idCliente);
     }
 
     @Override
     public void actualizarEstadoPedido(Integer idPedido, EstadoPedido nuevoEstado) {
-        Optional<Pedido> optional = pedidoRepository.findById(idPedido);
-        if (optional.isPresent()) {
-            Pedido pedido = optional.get();
-            pedido.setEstado(nuevoEstado);
-            pedidoRepository.save(pedido);
-        } else {
-            throw new RuntimeException("Pedido no encontrado con ID: " + idPedido);
-        }
+        Pedido pedido = obtenerPedidoPorId(idPedido);
+        pedido.setEstado(nuevoEstado);
+        pedidoRepository.save(pedido);
     }
 
     @Override
     public void asignarRepartidorAPedido(Integer idPedido, Integer idRepartidor) {
         Pedido pedido = obtenerPedidoPorId(idPedido);
-        pedido.setIdRepartidor(idRepartidor);
+        Repartidor repartidor = repartidorRepository.findById(idRepartidor)
+                .orElseThrow(() -> new RuntimeException("Repartidor no encontrado con ID: " + idRepartidor));
+        pedido.setRepartidor(repartidor);
         pedido.setEstado(EstadoPedido.EN_CAMINO);
         pedidoRepository.save(pedido);
     }

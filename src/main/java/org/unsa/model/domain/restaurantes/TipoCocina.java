@@ -4,5 +4,7 @@ package org.unsa.model.domain.restaurantes;
 public enum TipoCocina {
     PERUANA,
     VEGANA,
-    ITALIANA
+    ITALIANA,
+    JAPONESA,
+    MEXICANA
 }

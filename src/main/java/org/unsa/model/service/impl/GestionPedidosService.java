@@ -104,7 +104,7 @@ public class GestionPedidosService implements IPedidoServicio {
 
             Pedido pedidoGuardado = pedidoRepository.save(nuevoPedido);
 
-            logger.info("Pedido creado exitosamente con ID: {}", pedidoGuardado.getPedido());
+            logger.info("Pedido creado exitosamente con ID: {}", pedidoGuardado.getIdPedido());
             return pedidoGuardado;
 
         } catch (IllegalArgumentException e) {
