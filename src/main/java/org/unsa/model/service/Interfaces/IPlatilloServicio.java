@@ -11,10 +11,10 @@ import java.util.List;
  * Define las operaciones de negocio relacionadas con los platos de un restaurante.
  */
 public interface IPlatilloServicio {
-    Plato crearPlatillo(String idRestaurante, String nombre, String descripcion, Dinero precio);
-    List<Plato> listarPlatillosPorRestaurante(String idRestaurante);
-    Plato verDetallePlatillo(String idPlatillo);
-    Plato actualizarPlatillo(String idPlatillo, String nombre, String descripcion, Dinero precio, boolean disponible);
-    void eliminarPlatillo(String idPlatillo);
-    void marcarPlatilloComoDisponible(String idPlatillo, boolean disponible);
+    Plato crearPlatillo(Integer idRestaurante, String nombre, String descripcion, Dinero precio);
+    List<Plato> listarPlatillosPorRestaurante(Integer idRestaurante);
+    Plato verDetallePlatillo(Integer idPlatillo);
+    Plato actualizarPlatillo(Integer idPlatillo, String nombre, String descripcion, Dinero precio, boolean disponible);
+    void eliminarPlatillo(Integer idPlatillo);
+    void marcarPlatilloComoDisponible(Integer idPlatillo, boolean disponible);
 }

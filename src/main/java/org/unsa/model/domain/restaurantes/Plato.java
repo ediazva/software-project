@@ -6,10 +6,11 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Clase que representa un Plato ofrecido por un Restaurante.
- * Incluye atributos, constructores, getters, setters y metodos de comportamiento.
- */
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 @Entity // Marca esta clase como una entidad JPA
 @Table(name = "platos") // Mapea esta entidad a la tabla "platos"
 public class Plato {
@@ -51,35 +52,6 @@ public class Plato {
         this.disponible = true; // Por defecto, disponible
         logger.info(() -> "Nuevo plato creado (constructor vacio). ID sera asignado por JPA.");
     }
-
-    /**
-     * Constructor para la clase Plato con parametros basicos.
-     * El ID se pasa para simulacion, pero JPA lo gestionara en un entorno real.
-     * @param idPlato Identificador unico del plato (int).
-     * @param nombre Nombre del plato.
-     * @param descripcion Descripcion del plato.
-     * @param precio Objeto Dinero que representa el precio del plato.
-     */
-    public Plato(int idPlato, String nombre, String descripcion, Dinero precio) { // ID cambiado a int
-        // En un entorno real con GenerationType.IDENTITY, el ID no se pasaria
-        // en el constructor para nuevas entidades, se dejaria a la DB.
-        // Lo mantenemos para compatibilidad con TestUsuarios.java por ahora.
-        this.idPlato = idPlato; // Si idPlato es 0, JPA lo autogenerara
-        if (nombre == null || nombre.trim().isEmpty()) {
-            logger.log(Level.SEVERE, () -> "Intento de crear Plato con nombre nulo o vacio.");
-            throw new IllegalArgumentException("El nombre del plato no puede ser nulo o vacio.");
-        }
-        if (precio == null) {
-            logger.log(Level.SEVERE, () -> "Intento de crear Plato con precio nulo.");
-            throw new IllegalArgumentException("El precio del plato no puede ser nulo.");
-        }
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.precio = precio;
-        this.disponible = true; // Por defecto, disponible
-        logger.info(() -> "Plato creado (basico) con ID: " + this.idPlato + " y nombre: " + this.nombre);
-    }
-
     /**
      * Constructor completo para la clase Plato.
      * El ID se pasa para simulacion, pero JPA lo gestionara en un entorno real.
@@ -89,9 +61,7 @@ public class Plato {
      * @param disponible Estado de disponibilidad del plato.
      * @param precio Objeto Dinero que representa el precio del plato.
      */
-    public Plato(int idPlato, String nombre, String descripcion, boolean disponible, Dinero precio) { // ID cambiado a int
-        // En un entorno real con GenerationType.IDENTITY, el ID no se pasaria
-        // en el constructor para nuevas entidades, se dejaria a la DB.
+    public Plato(Integer idPlato, String nombre, String descripcion, boolean disponible, Dinero precio) {
         // Lo mantenemos para compatibilidad con TestUsuarios.java por ahora.
         this.idPlato = idPlato; // Si idPlato es 0, JPA lo autogenerara
         if (nombre == null || nombre.trim().isEmpty()) {
@@ -122,21 +92,6 @@ public class Plato {
         this.idPlato = id;
         logger.info(() -> "ID de plato actualizado a: " + id);
     }
-    public String getNombre(){
-        return nombre;
-    }
-
-    public String getDescripcion(){
-        return descripcion;
-    }
-
-    public boolean isDisponible(){ // Getter para booleanos es 'is'
-        return disponible;
-    }
-
-    public Dinero getPrecio(){
-        return precio;
-    }
 
     // --- Setters ---
     public void setIdPlato(int idPlato) { // Cambiado a int
@@ -147,23 +102,6 @@ public class Plato {
         this.idPlato = idPlato;
         logger.info(() -> "ID de plato actualizado a: " + idPlato);
     }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public void setDisponible(boolean disponible) {
-        this.disponible = disponible;
-    }
-
-    public void setPrecio(Dinero precio) {
-        this.precio = precio;
-    }
-
 
     // --- Implementación de Métodos de Comportamiento ---
 

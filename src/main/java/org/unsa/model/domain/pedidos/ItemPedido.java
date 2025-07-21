@@ -1,9 +1,10 @@
 // file: src/main/java/org/unsa/model/dominio/pedidos/ItemPedido.java
 package org.unsa.model.domain.pedidos;
 
-import jakarta.persistence.*; // Importar todas las anotaciones de JPA
+import jakarta.persistence.*;
 import org.unsa.model.domain.restaurantes.Dinero;
 import org.unsa.model.domain.restaurantes.Plato;
+import org.unsa.model.domain.pedidos.Pedido;
 
 import java.util.Objects;
 import java.util.logging.Level;
@@ -21,7 +22,7 @@ import java.util.logging.Logger;
 public class ItemPedido {
     @Id // Marca 'id' como la clave primaria
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Indica que el ID sera autoincremental por la DB
-    private int id; // ID propio para el ItemPedido
+    private Integer id; // ID propio para el ItemPedido
 
     @ManyToOne // Relacion muchos a uno con Plato
     @JoinColumn(name = "plato_id", nullable = false) // Columna para la clave foranea
@@ -29,11 +30,14 @@ public class ItemPedido {
     private int cantidad;
 
     @Embedded // Indica que Dinero es un componente incrustable
-    @AttributeOverrides({
-            @AttributeOverride(name = "valor", column = @Column(name = "subtotal_valor")),
-            @AttributeOverride(name = "moneda", column = @Column(name = "subtotal_moneda"))
-    })
+
+    @AttributeOverride(name = "valor", column = @Column(name = "subtotal_valor"))
+    @AttributeOverride(name = "moneda", column = @Column(name = "subtotal_moneda"))
     private Dinero subtotal; // Subtotal calculado para este item
+
+    @ManyToOne(fetch = FetchType.LAZY) // Many ItemPedidos to One Pedido
+    @JoinColumn(name = "pedido_id", nullable = false) // Foreign key column in items_pedido table
+    private Pedido pedido;
 
     @Transient // Indica que este campo no se mapeara a la base de datos
     private static final Logger logger = Logger.getLogger(ItemPedido.class.getName());
@@ -71,7 +75,7 @@ public class ItemPedido {
     }
 
     // --- Getters ---
-    public int getId() { return id; } // Getter para el ID propio del ItemPedido
+    public Integer getId() { return id; } // Getter para el ID propio del ItemPedido
     public void setId(int id) { this.id = id; } // Setter para el ID propio del ItemPedido
 
     public Plato getPlato() {
@@ -85,8 +89,11 @@ public class ItemPedido {
     public Dinero getSubtotal() {
         return subtotal;
     }
+    public Pedido getPedido() { return pedido; }
 
     // --- Setters ---
+    public void setId(Integer id ) { this.id = id; }
+    public void setPedido(Pedido pedido) { this.pedido = pedido; }
     public void setPlato(Plato plato) {
         if (plato == null) {
             logger.log(Level.WARNING, () -> "Intento de establecer plato nulo para ItemPedido.");
@@ -115,13 +122,15 @@ public class ItemPedido {
         logger.info(() -> "Cantidad de ItemPedido actualizada a: " + cantidad);
     }
 
+
+
     // --- Métodos Esenciales para Objetos (equals y hashCode) ---
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ItemPedido itemPedido = (ItemPedido) o;
-        return id == itemPedido.id; // ItemsPedido son iguales si tienen el mismo ID
+        return id.equals(itemPedido.id); // ItemsPedido son iguales si tienen el mismo ID
     }
 
     @Override

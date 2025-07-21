@@ -6,18 +6,23 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import lombok.Getter;
+import lombok.Setter;
+import jakarta.persistence.Embedded;
 
 /**
  * Clase que representa un Usuario base en el sistema SueldoMinimo App.
  * Demuestra el estilo "Things" (POO) con encapsulacion y responsabilidades claras.
  */
+@Getter
+@Setter
 @Entity // Marca esta clase como una entidad JPA
 @Table(name = "usuarios") // Mapea esta entidad a la tabla "usuarios"
 @Inheritance(strategy = InheritanceType.JOINED) // Estrategia de herencia para subclases
 public class Usuario {
     @Id // Marca 'id' como la clave primaria
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Indica que el ID sera autoincremental por la DB
-    private Integer id; // Cambiado a int
+    private Integer id;
     private String nombre;
     @Column(unique = true, nullable = false) // El email debe ser unico y no nulo
     private String email;
@@ -29,6 +34,8 @@ public class Usuario {
     @Transient // Indica que este campo no se mapeara a la base de datos
     private static final Logger logger = Logger.getLogger(Usuario.class.getName());
 
+    @Embedded
+    private Direccion direccionPrincipal;
     // --- AGREGAR ESTAS CONSTANTES AQUÍ ---
     private static final String TO_STRING_PREFIX = "Usuario{"; // Inicio de la salida del toString
     private static final String ID_FIELD = "id=";
@@ -63,7 +70,7 @@ public class Usuario {
      * @param email Correo electronico del usuario.
      * @param telefono Numero de telefono del usuario.
      */
-    public Usuario(int id, String nombre, String email, String telefono) { // ID cambiado a int
+    public Usuario(Integer id, String nombre, String email, String telefono) { // ID cambiado a int
         // En un entorno real con GenerationType.IDENTITY, el ID no se pasaria
         // en el constructor para nuevas entidades, se dejaria a la DB.
         // Lo mantenemos para compatibilidad con TestUsuarios.java por ahora.
@@ -82,7 +89,7 @@ public class Usuario {
 
     // --- Getters y Setters ---
 
-    public int getId() { return id; } // Cambiado a int
+
     public void setId(Integer id) { // Cambiado a int
         // La validación de ID positivo es más relevante para Ids pasados manualmente
         // Con GenerationType.IDENTITY, la DB se encarga.
@@ -94,10 +101,6 @@ public class Usuario {
         logger.info(() -> "ID de usuario actualizado a: " + id);
     }
 
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
-
-    public String getEmail() { return email; }
     /**
      * Establece el correo electronico del usuario.
      * Demuestra Error/Exception Handling con validacion.
@@ -112,14 +115,6 @@ public class Usuario {
         this.email = email;
         logger.info(() -> "Email actualizado para usuario " + this.id + " a: " + email);
     }
-
-    public String getTelefono() { return telefono; }
-    public void setTelefono(String telefono) { this.telefono = telefono; }
-
-    public Date getFechaRegistro() { return fechaRegistro; }
-
-    public boolean isActivo() { return activo; }
-    public void setActivo(boolean activo) { this.activo = activo; }
 
     // --- Métodos de Comportamiento (Parte del estilo "Things") ---
 

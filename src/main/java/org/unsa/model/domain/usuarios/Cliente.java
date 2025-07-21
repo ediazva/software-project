@@ -6,11 +6,16 @@ import jakarta.persistence.PrimaryKeyJoinColumn; // Para herencia JOINED
 import jakarta.persistence.Transient; // Para campos no persistentes
 
 import java.util.logging.Logger;
+import jakarta.persistence.*;
+import lombok.*;
 
 /**
  * Clase que representa a un Cliente en el sistema SueldoMinimo App.
  * Extiende de Usuario y puede incluir atributos especificos de cliente.
  */
+@Getter
+@Setter
+@AllArgsConstructor
 @Entity // Marca esta clase como una entidad JPA
 @PrimaryKeyJoinColumn(name = "id") // Especifica la columna de union con la tabla padre
 public class Cliente extends Usuario {
@@ -19,6 +24,9 @@ public class Cliente extends Usuario {
     @Transient // Indica que este campo no se mapeara a la base de datos
     private static final Logger logger = Logger.getLogger(Cliente.class.getName());
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "direccion_id", referencedColumnName = "id")
+    private Direccion direccionPrincipal;
     /**
      * Constructor vacío para JPA.
      */
@@ -34,7 +42,7 @@ public class Cliente extends Usuario {
      * @param telefono Numero de telefono del cliente.
      * @param preferenciasAlimentarias Preferencias dieteticas o alimentarias del cliente (puede ser nulo).
      */
-    public Cliente(int id, String nombre, String email, String telefono, String preferenciasAlimentarias) { // ID cambiado a int
+    public Cliente(Integer id, String nombre, String email, String telefono, String preferenciasAlimentarias) { // ID cambiado a int
         super(id, nombre, email, telefono); // Llama al constructor de la clase padre Usuario
         this.preferenciasAlimentarias = preferenciasAlimentarias;
         logger.info(() -> "Cliente creado con ID: " + getId() + ", nombre: " + getNombre());
