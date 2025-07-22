@@ -21,7 +21,6 @@ import java.util.logging.Logger;
 @Service
 @RequiredArgsConstructor
 public class PedidoManager implements IPedidoServicio {
-
     private static final Logger logger = Logger.getLogger(PedidoManager.class.getName());
 
     private final PedidoRepository pedidoRepository;
