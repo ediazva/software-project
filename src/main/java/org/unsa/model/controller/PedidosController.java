@@ -103,26 +103,27 @@ public class PedidosController {
         return new ResponseEntity<>(pedidos, HttpStatus.OK); // 200 OK
     }
 
-    /**
-     * Endpoint para actualizar el estado de un pedido.
-     * PUT /api/pedidos/{idPedido}/estado
-     * @param idPedido ID del pedido a actualizar (int).
-     * @param request DTO con el nuevo estado.
-     * @return ResponseEntity con estado HTTP 200 si es exitoso, o 400/404/500.
-     */
     @PutMapping("/{idPedido}/estado")
-    public ResponseEntity<Void> actualizarEstadoPedido(@PathVariable Integer idPedido, @RequestBody ActualizarEstadoPedidoRequest request) { // ID cambiado a int
-        logger.warn("Recibida solicitud para actualizar estado de pedido {} a {} ",idPedido,request.getNuevoEstado());
+    public ResponseEntity<Void> actualizarEstadoPedido(
+            @PathVariable Integer idPedido,
+            @RequestBody ActualizarEstadoPedidoRequest request) {
+        logger.warn("Recibida solicitud para actualizar estado de pedido {} a {}",
+                     idPedido,
+                     request.getNuevoEstado());
+
         try {
-            EstadoPedido nuevoEstado = EstadoPedido.valueOf(request.getNuevoEstado().toUpperCase()); // Convertir String a Enum
+            EstadoPedido nuevoEstado = EstadoPedido.valueOf(request.getNuevoEstado().toUpperCase());
             pedidoServicio.actualizarEstadoPedido(idPedido, nuevoEstado);
-            return new ResponseEntity<>(HttpStatus.OK); // 200 OK
+
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (IllegalArgumentException e) {
-            logger.warn("Estado invalido o pedido no encontrado para ID {} : {} ",idPedido,e.getMessage(),e);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // 400 Bad Request
+            logger.warn("Estado invalido o pedido no encontrado para ID {} : {}", idPedido, e.getMessage(), e);
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            logger.warn("Error interno al actualizar estado de pedido {} : {} ",idPedido,e.getMessage(),e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // 500 Internal Server Error
+            logger.warn("Error interno al actualizar estado de pedido {} : {} ", idPedido, e.getMessage(), e);
+
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

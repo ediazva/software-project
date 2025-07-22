@@ -22,23 +22,15 @@ import lombok.*;
  */
 @Data
 @Entity
-@Table(name = "pedidos") // Mapea esta entidad a la tabla "pedidos"
+@Table(name = "pedidos")
 public class Pedido {
     @Id // Marca 'id' como la clave primaria
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idPedido; // ID de tipo int
 
-    @ManyToOne // Relacion muchos a uno con Cliente
-    @JoinColumn(name = "cliente_id", nullable = false) // Columna para la clave foranea
-    private Cliente cliente; // Referencia al objeto Cliente
-
     @ManyToOne // Relacion muchos a uno con Repartidor (opcional)
     @JoinColumn(name = "repartidor_id") // Columna para la clave foranea, puede ser nula
     private Repartidor repartidor; // Referencia al objeto Repartidor
-
-    @ManyToOne // Relacion muchos a uno con Restaurante
-    @JoinColumn(name = "restaurante_id", nullable = false) // Columna para la clave foranea
-    private Restaurante restaurante; // Referencia al objeto Restaurante
 
     @Temporal(TemporalType.TIMESTAMP) // Almacena la fecha y hora completa
     @Column(nullable = false)
@@ -48,28 +40,13 @@ public class Pedido {
     @Column(nullable = false)
     private EstadoPedido estado;
 
+    @Embedded
+    private PedidoData info;
+
     @Embedded // Incrusta el objeto Dinero
     @AttributeOverride(name = "valor", column = @Column(name = "monto_total_valor"))
     @AttributeOverride(name = "moneda", column = @Column(name = "monto_total_moneda"))
     private Dinero montoTotal;
-
-
-
-    private String instruccionesEspeciales;
-
-    @Embedded // Incrusta el objeto Direccion
-
-            @AttributeOverride(name = "calle", column = @Column(name = "direccion_calle"))
-            @AttributeOverride(name = "numero", column = @Column(name = "direccion_numero"))
-            @AttributeOverride(name = "ciudad", column = @Column(name = "direccion_ciudad"))
-            @AttributeOverride(name = "codigoPostal", column = @Column(name = "direccion_codigo_postal"))
-            @AttributeOverride(name = "referencia", column = @Column(name = "direccion_referencia"))
-
-    private Direccion direccionEntrega;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pedido", orphanRemoval = true) // Un pedido tiene muchos items, cascada completa
-    private List<ItemPedido> items = new ArrayList<>();
-    // Inicializar para evitar NullPointerException
 
     @Transient // Indica que este campo no se mapeara a la base de datos
     private static final Logger logger = Logger.getLogger(Pedido.class.getName());
@@ -77,17 +54,11 @@ public class Pedido {
     // Constantes para literales de String duplicados en toString()
     private static final String TO_STRING_PREFIX = "Pedido{";
     private static final String ID_FIELD = "id=";
-    private static final String CLIENTE_FIELD = ", cliente=";
     private static final String REPARTIDOR_FIELD = ", repartidor=";
-    private static final String RESTAURANTE_FIELD = ", restaurante=";
     private static final String FECHA_HORA_CREACION_FIELD = ", fechaHoraCreacion=";
     private static final String ESTADO_FIELD = ", estado=";
     private static final String MONTO_TOTAL_FIELD = ", montoTotal=";
-    private static final String INSTRUCCIONES_ESPECIALES_FIELD = ", instruccionesEspeciales='";
-    private static final String DIRECCION_ENTREGA_FIELD = ", direccionEntrega=";
-    private static final String ITEMS_FIELD = ", items=";
     private static final String TO_STRING_SUFFIX = "}";
-    private static final String SINGLE_QUOTE = "'";
 
     /**
      * Constructor vacío para la clase Pedido.
@@ -104,33 +75,18 @@ public class Pedido {
      * Constructor completo para la clase Pedido.
      * Los IDs de Cliente, Repartidor y Restaurante se reemplazan por los objetos reales.
      * @param idPedido Identificador unico del pedido (int).
-     * @param cliente Cliente que realiza el pedido.
-     * @param restaurante Restaurante del pedido.
-     * @param direccionEntrega Direccion de entrega del pedido.
-     * @param items Lista de items del pedido.
-     * @param instruccionesEspeciales Instrucciones adicionales para el pedido (puede ser nulo).
+     *                  En un entorno real con GenerationType.IDENTITY, el ID no se pasaria
+     *                  en el constructor para nuevas entidades, se dejaria a la DB.
+     *                 Lo mantenemos para compatibilidad con TestUsuarios.java por ahora.
      */
-    public Pedido(Integer idPedido, Cliente cliente, Restaurante restaurante, Direccion direccionEntrega, List<ItemPedido> items, String instruccionesEspeciales) { // ID cambiado a int
-        // En un entorno real con GenerationType.IDENTITY, el ID no se pasaria
-        // en el constructor para nuevas entidades, se dejaria a la DB.
-        // Lo mantenemos para compatibilidad con TestUsuarios.java por ahora.
+    public Pedido(PedidoData info, Integer idPedido) { // ID cambiado a int
         this.idPedido = idPedido;
-
-        if (cliente == null) throw new IllegalArgumentException("El cliente no puede ser nulo.");
-        if (restaurante == null) throw new IllegalArgumentException("El restaurante no puede ser nulo.");
-        if (direccionEntrega == null) throw new IllegalArgumentException("La direccion de entrega no puede ser nula.");
-        if (items == null || items.isEmpty()) throw new IllegalArgumentException("La lista de items no puede ser nula o vacia.");
-
-        this.cliente = cliente;
-        this.restaurante = restaurante;
-        this.direccionEntrega = direccionEntrega;
-        this.items.addAll(items); // Añadir todos los items
-        this.instruccionesEspeciales = instruccionesEspeciales;
+        this.info = info;
         this.fechaHoraCreacion = new Date();
         this.estado = EstadoPedido.PENDIENTE;
         this.montoTotal = calcularMontoTotal(); // Calcular monto total al crear
         this.repartidor = null; // Inicializa repartidor como nulo (no asignado)
-        logger.info(() -> "Pedido creado (completo) con ID: " + this.idPedido + " para cliente: " + this.cliente.getId());
+        logger.info(() -> "Pedido creado (completo) con ID: " + this.idPedido + " para cliente: " + this.info.getCliente().getId());
     }
 
     // --- Getters ---
@@ -145,6 +101,7 @@ public class Pedido {
      */
     @Transient // Este metodo no es persistente directamente
     private Dinero calcularMontoTotal() {
+        var items = info.getItems();
         if (items == null || items.isEmpty()) {
             return new Dinero(0.0, "PEN"); // O la moneda por defecto
         }
@@ -189,15 +146,10 @@ public class Pedido {
     public String toString() {
         return TO_STRING_PREFIX +
                 ID_FIELD + idPedido +
-                CLIENTE_FIELD + (cliente != null ? cliente.getId() : "N/A") +
                 REPARTIDOR_FIELD + (repartidor != null ? repartidor.getId() : "N/A") +
-                RESTAURANTE_FIELD + (restaurante != null ? restaurante.getId() : "N/A") +
                 FECHA_HORA_CREACION_FIELD + fechaHoraCreacion +
                 ESTADO_FIELD + estado +
                 MONTO_TOTAL_FIELD + montoTotal +
-                INSTRUCCIONES_ESPECIALES_FIELD + (instruccionesEspeciales != null ? instruccionesEspeciales : "N/A") + SINGLE_QUOTE +
-                DIRECCION_ENTREGA_FIELD + direccionEntrega +
-                ITEMS_FIELD + items +
                 TO_STRING_SUFFIX;
     }
 
