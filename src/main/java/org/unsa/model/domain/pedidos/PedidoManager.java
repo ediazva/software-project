@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.unsa.model.domain.usuarios.Cliente;
 import org.unsa.model.domain.usuarios.Direccion;
 import org.unsa.model.domain.usuarios.Repartidor;
+import org.unsa.model.exceptions.ItemNotFoundException;
 import org.unsa.model.domain.restaurantes.Restaurante;
 import org.unsa.model.repository.ClienteRepository;
 import org.unsa.model.repository.PedidoRepository;
@@ -28,35 +29,42 @@ public class PedidoManager implements IPedidoServicio {
     private final RestauranteRepository restauranteRepository;
     private final RepartidorRepository repartidorRepository;
 
-    public Pedido crearNuevoPedido(Integer idCliente, Integer idRestaurante, List<DatosPlatoPedido> itemsCarrito, Direccion direccionEntrega, String instruccionesEspeciales) {
-        try {
-            Cliente cliente = clienteRepository.findById(idCliente)
-                    .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + idCliente));
-            Restaurante restaurante = restauranteRepository.findById(idRestaurante)
-                    .orElseThrow(() -> new RuntimeException("Restaurante no encontrado con ID: " + idRestaurante));
+    @Override
+    public Pedido crearPedido(PedidoData info) {
+        return crearNuevoPedido(info);
+    }
 
-            Pedido pedido = new Pedido();
-            pedido.setCliente(cliente);
-            pedido.setRestaurante(restaurante);
-            pedido.setDireccionEntrega(direccionEntrega);
-            pedido.setInstruccionesEspeciales(instruccionesEspeciales);
-            pedido.setEstado(EstadoPedido.PENDIENTE);
+    public Pedido crearNuevoPedido(PedidoData info) {
+        validarExistenciaCliente(info.getCliente().getId());
+        validarExistenciaRestaurante(info.getRestaurante().getId());
 
-            // Convertir DatosPlatoPedido -> ItemPedido aquí si es necesario
-            // pedido.setItems(convertirItems(itemsCarrito));
+        Pedido pedido = construirPedido(info);
+        return guardarPedido(pedido);
+    }
 
-            Pedido pedidoGuardado = pedidoRepository.save(pedido);
-            logger.info("Pedido creado exitosamente con ID: " + pedidoGuardado.getIdPedido());
-            return pedidoGuardado;
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, "Error al crear el pedido: " + e.getMessage(), e);
-            throw new RuntimeException("No se pudo crear el pedido.");
+    private void validarExistenciaCliente(Integer id) {
+        if (!clienteRepository.existsById(id)) {
+            throw new ItemNotFoundException("Cliente no encontrado con ID: " + id);
         }
     }
 
-    @Override
-    public Pedido crearPedido(Integer idCliente, Integer idRestaurante, List<DatosPlatoPedido> itemsCarrito, Direccion direccionEntrega, String instruccionesEspeciales) {
-        return crearNuevoPedido(idCliente, idRestaurante, itemsCarrito, direccionEntrega, instruccionesEspeciales);
+    private void validarExistenciaRestaurante(Integer id) {
+        if (!restauranteRepository.existsById(id)) {
+            throw new ItemNotFoundException("Restaurante no encontrado con ID: " + id);
+        }
+    }
+
+    private Pedido construirPedido(PedidoData info) {
+        Pedido pedido = new Pedido();
+        pedido.setInfo(info);
+        pedido.setEstado(EstadoPedido.PENDIENTE);
+        return pedido;
+    }
+
+    private Pedido guardarPedido(Pedido pedido) {
+        Pedido guardado = pedidoRepository.save(pedido);
+        logger.info("Pedido creado exitosamente con ID: " + guardado.getIdPedido());
+        return guardado;
     }
 
     @Override

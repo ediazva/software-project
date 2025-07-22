@@ -4,6 +4,7 @@ package org.unsa.model.service.Interfaces;
 import org.unsa.model.domain.pedidos.Pedido;
 import org.unsa.model.domain.pedidos.DatosPlatoPedido;
 import org.unsa.model.domain.pedidos.EstadoPedido;
+import org.unsa.model.domain.pedidos.PedidoData;
 import org.unsa.model.domain.usuarios.Direccion;
 
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
  * Define las operaciones de negocio relacionadas con los pedidos.
  */
 public interface IPedidoServicio {
-    Pedido crearPedido(Integer idCliente, Integer idRestaurante, List<DatosPlatoPedido> itemsCarrito, Direccion direccionEntrega, String instruccionesEspeciales);
+    Pedido crearPedido(PedidoData info);
     Pedido obtenerPedidoPorId(Integer idPedido);
     List<Pedido> obtenerPedidosPorCliente(Integer idCliente);
     void actualizarEstadoPedido(Integer idPedido, EstadoPedido nuevoEstado);
